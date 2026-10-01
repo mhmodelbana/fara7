@@ -1734,22 +1734,19 @@
             let lastPetalTime = 0;
             let lastPetalScrollY = 0;
 
-            /* =========================================
+           /* =========================================
    AUTO SCROLL
    ========================================= */
 
 let autoScrollActive = false;
 let autoScrollFrame = null;
 let autoScrollResumeTimer = null;
-let lastUserInteraction = Date.now();
 
-const AUTO_SCROLL_SPEED = 0.28; // سرعة النزول - كل ما تقل يبقى أهدى
+const AUTO_SCROLL_SPEED = 0.20; // نزول هادي جدًا
 const AUTO_SCROLL_RESUME_DELAY = 3500;
 
 function stopAutoScrollTemporarily() {
-    lastUserInteraction = Date.now();
-
-    if (!autoScrollActive) return;
+    if (!invitationOpened) return;
 
     autoScrollActive = false;
 
@@ -1771,24 +1768,31 @@ function stopAutoScrollTemporarily() {
 function autoScrollLoop() {
     if (!autoScrollActive || !invitationOpened) return;
 
-    const maxScroll =
-        document.documentElement.scrollHeight - window.innerHeight;
+    const maxScroll = Math.max(
+        0,
+        document.documentElement.scrollHeight - window.innerHeight
+    );
 
-    if (window.scrollY >= maxScroll - 2) {
+    if (window.scrollY >= maxScroll - 1) {
         autoScrollActive = false;
         autoScrollFrame = null;
         return;
     }
 
-    window.scrollBy(0, AUTO_SCROLL_SPEED);
+    window.scrollTo({
+        top: window.scrollY + AUTO_SCROLL_SPEED,
+        behavior: 'auto'
+    });
 
     autoScrollFrame = requestAnimationFrame(autoScrollLoop);
 }
 
 function startAutoScroll() {
+    if (!invitationOpened) return;
+
     clearTimeout(autoScrollResumeTimer);
 
-    if (!invitationOpened) return;
+    if (autoScrollActive) return;
 
     autoScrollActive = true;
     autoScrollLoop();
@@ -2039,20 +2043,24 @@ function startAutoScroll() {
         welcomeScreen.classList.add('hide');
         welcomeScreen.setAttribute('aria-hidden', 'true');
 
-        // يبدأ النزول التلقائي بعد انتهاء الترحيب
         setTimeout(() => {
             startAutoScroll();
-        }, 700);
+        }, 500);
 
     }, 2600);
 }
 
             welcomeScreen.addEventListener('click', () => {
-                welcomeScreen.classList.remove('show');
-                welcomeScreen.classList.add('hide');
-                welcomeScreen.setAttribute('aria-hidden', 'true');
-                clearTimeout(welcomeTimer);
-            });
+    welcomeScreen.classList.remove('show');
+    welcomeScreen.classList.add('hide');
+    welcomeScreen.setAttribute('aria-hidden', 'true');
+
+    clearTimeout(welcomeTimer);
+
+    setTimeout(() => {
+        startAutoScroll();
+    }, 500);
+});
 
             /* =========================================
                VIP ENTRANCE
@@ -2183,25 +2191,18 @@ function startAutoScroll() {
                     }
                 });
             }, 1000);
-/* =========================================
+
+            /* =========================================
    PAUSE AUTO SCROLL ON USER INTERACTION
    ========================================= */
 
-window.addEventListener('wheel', stopAutoScrollTemporarily, {
-    passive: true
-});
+window.addEventListener('wheel', () => {
+    stopAutoScrollTemporarily();
+}, { passive: true });
 
-window.addEventListener('touchstart', stopAutoScrollTemporarily, {
-    passive: true
-});
-
-window.addEventListener('touchmove', stopAutoScrollTemporarily, {
-    passive: true
-});
-
-window.addEventListener('pointerdown', stopAutoScrollTemporarily, {
-    passive: true
-});
+window.addEventListener('touchmove', () => {
+    stopAutoScrollTemporarily();
+}, { passive: true });
 
 window.addEventListener('keydown', (event) => {
     const keys = [
