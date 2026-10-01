@@ -1888,13 +1888,19 @@ function startAutoScroll() {
                 if (!sectionRail || !sectionDots.length) return;
 
                 sectionDots.forEach(dot => {
-                    dot.addEventListener('click', () => {
-                        const target = document.getElementById(dot.dataset.target);
-                        if (target) {
-                            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                    });
-                });
+    dot.addEventListener('click', () => {
+        stopAutoScrollTemporarily();
+
+        const target = document.getElementById(dot.dataset.target);
+
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
 
                 const sections = sectionDots
                     .map(dot => document.getElementById(dot.dataset.target))
