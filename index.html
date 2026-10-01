@@ -629,6 +629,49 @@
         }
 
         /* =========================================
+           DESIGNER FOOTER
+           ========================================= */
+
+        .designer-credit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 7px;
+            padding: 9px 15px;
+            border: 1px solid rgba(183,110,121,0.14);
+            border-radius: 999px;
+            background: rgba(255,255,255,0.58);
+            box-shadow: 0 8px 24px rgba(183,110,121,0.06);
+            backdrop-filter: blur(8px);
+        }
+
+        .designer-label {
+            font-family: 'Cairo', sans-serif;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .designer-link {
+            font-family: 'Cairo', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--rose-gold);
+            text-decoration: none;
+            transition: color 0.25s ease, transform 0.25s ease;
+        }
+
+        .designer-link:hover {
+            color: #8f4d57;
+            transform: translateY(-1px);
+        }
+
+        .designer-instagram {
+            color: var(--gold-classic);
+            font-size: 12px;
+        }
+
+        /* =========================================
            FOOTER + PATTERN
            ========================================= */
 
@@ -1382,12 +1425,12 @@
                         </h4>
 
                         <ul class="space-y-4 font-cairo text-[var(--text-muted)] text-lg">
-                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>كابتن / رضا محمد عبد العال</li>
+                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--rose-gold)] font-bold">كابتن / رضا محمد عبد العال</span></li>
                             <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>كابتن / محمد رضا عبد العال</li>
                             <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>كابتن / مصعب رضا عبد العال</li>
-                            <li class="pt-4 mt-4 border-t border-gray-200 text-[var(--text-dark)] font-bold text-center md:text-right">
+                            <li class="text-[var(--text-muted)] text-center md:text-right">
                                 الحاج / حسين أحمد حسين
-                                <span class="text-sm font-normal text-[var(--rose-gold)]">(جد العريس)</span>
+                                <span class="text-sm font-normal text-[var(--text-muted)]">(جد العريس)</span>
                             </li>
                         </ul>
                     </div>
@@ -1409,7 +1452,7 @@
                             <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--rose-gold)] font-bold ml-1">المرحوم الشيخ /</span> عبد الحميد الطويل</li>
                             <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--rose-gold)] font-bold ml-1">المرحوم /</span> محي الدين عبد الحميد الطويل</li>
                             <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--text-dark)] font-bold ml-1">الحاج /</span> محمد عبد الحميد الطويل</li>
-                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--text-dark)] font-bold ml-1">المهندس /</span> أحمد عبد الحميد الطويل</li>
+                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--rose-gold)] font-bold">المهندس / أحمد عبد الحميد الطويل</span></li>
                             <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--text-dark)] font-bold ml-1">الحاج /</span> مصطفى عبد الحميد الطويل</li>
                             <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--text-dark)] font-bold ml-1">المحاسب /</span> عبد الوهاب عبد الحميد الطويل</li>
                             <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--text-dark)] font-bold ml-1">المهندس /</span> عبد الحميد أحمد عبد الحميد الطويل</li>
@@ -1557,17 +1600,33 @@
         </section>
 
         <!-- FOOTER -->
-        <footer class="py-12 text-center relative z-10 mt-10">
+        <footer class="py-14 text-center relative z-10 mt-10">
             <div class="container mx-auto px-4" data-aos="fade-up">
                 <div class="section-divider mb-8">
                     <i class="fab fa-pagelines text-[var(--rose-gold)] text-xl"></i>
                 </div>
-                <h2 class="font-amiri text-3xl md:text-5xl text-gold mb-6">
+
+                <h2 class="font-amiri text-3xl md:text-5xl text-gold mb-5">
                     والعاقبة عندكم في المسرات
                 </h2>
-                <p class="font-cairo text-sm text-[var(--text-muted)]">
+
+                <p class="font-cairo text-sm md:text-base text-[var(--text-muted)] mb-7">
                     عمار &amp; فاطمة · بكل حب
                 </p>
+
+                <div class="designer-credit">
+                    <span class="designer-label">تصميم</span>
+                    <a
+                        class="designer-link"
+                        href="https://www.instagram.com/m7modelbana/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="إنستجرام بشمهندس محمود محمد البنا"
+                    >
+                        بشمهندس محمود محمد البنا
+                    </a>
+                    <i class="fab fa-instagram designer-instagram" aria-hidden="true"></i>
+                </div>
             </div>
         </footer>
 
