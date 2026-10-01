@@ -1735,6 +1735,65 @@
             let lastPetalScrollY = 0;
 
             /* =========================================
+   AUTO SCROLL
+   ========================================= */
+
+let autoScrollActive = false;
+let autoScrollFrame = null;
+let autoScrollResumeTimer = null;
+let lastUserInteraction = Date.now();
+
+const AUTO_SCROLL_SPEED = 0.28; // سرعة النزول - كل ما تقل يبقى أهدى
+const AUTO_SCROLL_RESUME_DELAY = 3500;
+
+function stopAutoScrollTemporarily() {
+    lastUserInteraction = Date.now();
+
+    if (!autoScrollActive) return;
+
+    autoScrollActive = false;
+
+    if (autoScrollFrame) {
+        cancelAnimationFrame(autoScrollFrame);
+        autoScrollFrame = null;
+    }
+
+    clearTimeout(autoScrollResumeTimer);
+
+    autoScrollResumeTimer = setTimeout(() => {
+        if (!invitationOpened) return;
+
+        autoScrollActive = true;
+        autoScrollLoop();
+    }, AUTO_SCROLL_RESUME_DELAY);
+}
+
+function autoScrollLoop() {
+    if (!autoScrollActive || !invitationOpened) return;
+
+    const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
+
+    if (window.scrollY >= maxScroll - 2) {
+        autoScrollActive = false;
+        autoScrollFrame = null;
+        return;
+    }
+
+    window.scrollBy(0, AUTO_SCROLL_SPEED);
+
+    autoScrollFrame = requestAnimationFrame(autoScrollLoop);
+}
+
+function startAutoScroll() {
+    clearTimeout(autoScrollResumeTimer);
+
+    if (!invitationOpened) return;
+
+    autoScrollActive = true;
+    autoScrollLoop();
+}
+            /* =========================================
                ROSE PETALS
                ========================================= */
 
@@ -1970,16 +2029,23 @@
                ========================================= */
 
             function showWelcome() {
-                welcomeScreen.classList.add('show');
-                welcomeScreen.setAttribute('aria-hidden', 'false');
+    welcomeScreen.classList.add('show');
+    welcomeScreen.setAttribute('aria-hidden', 'false');
 
-                clearTimeout(welcomeTimer);
-                welcomeTimer = setTimeout(() => {
-                    welcomeScreen.classList.remove('show');
-                    welcomeScreen.classList.add('hide');
-                    welcomeScreen.setAttribute('aria-hidden', 'true');
-                }, 2600);
-            }
+    clearTimeout(welcomeTimer);
+
+    welcomeTimer = setTimeout(() => {
+        welcomeScreen.classList.remove('show');
+        welcomeScreen.classList.add('hide');
+        welcomeScreen.setAttribute('aria-hidden', 'true');
+
+        // يبدأ النزول التلقائي بعد انتهاء الترحيب
+        setTimeout(() => {
+            startAutoScroll();
+        }, 700);
+
+    }, 2600);
+}
 
             welcomeScreen.addEventListener('click', () => {
                 welcomeScreen.classList.remove('show');
@@ -2117,7 +2183,41 @@
                     }
                 });
             }, 1000);
+/* =========================================
+   PAUSE AUTO SCROLL ON USER INTERACTION
+   ========================================= */
 
+window.addEventListener('wheel', stopAutoScrollTemporarily, {
+    passive: true
+});
+
+window.addEventListener('touchstart', stopAutoScrollTemporarily, {
+    passive: true
+});
+
+window.addEventListener('touchmove', stopAutoScrollTemporarily, {
+    passive: true
+});
+
+window.addEventListener('pointerdown', stopAutoScrollTemporarily, {
+    passive: true
+});
+
+window.addEventListener('keydown', (event) => {
+    const keys = [
+        'ArrowDown',
+        'ArrowUp',
+        'PageDown',
+        'PageUp',
+        'Home',
+        'End',
+        ' '
+    ];
+
+    if (keys.includes(event.key)) {
+        stopAutoScrollTemporarily();
+    }
+});
         });
     </script>
 </body>
