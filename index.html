@@ -224,11 +224,79 @@
             transform: translateY(-120px);
             z-index: 10;
         }
-        .envelope-container.expand .letter {
-            /* The "Fagra" effect: Letter flies to camera and becomes the screen */
-            transform: translateY(-150px) scale(15);
-            opacity: 0;
-            transition: transform 1.5s ease-in, opacity 1s ease-in 0.5s;
+        /* الورقة تطير لفوق وتختفي قبل ظهور الدعوة الأساسية */
+        .envelope-container.launch .letter {
+            animation: letter-launch 1.15s cubic-bezier(0.2, 0.75, 0.2, 1) forwards;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .envelope-container.launch .envelope {
+            animation: envelope-fade 0.8s ease forwards;
+            animation-delay: 0.55s;
+        }
+
+        .envelope-container.launch .pulse-text {
+            animation: pulse-text-hide 0.35s ease forwards;
+        }
+
+        @keyframes letter-launch {
+            0% {
+                transform: translateY(-120px) scale(1) rotateZ(0deg);
+                opacity: 1;
+                filter: blur(0);
+            }
+            25% {
+                transform: translateY(-180px) scale(1.04) rotateZ(-1.5deg);
+                opacity: 1;
+                filter: blur(0);
+            }
+            65% {
+                transform: translateY(-55vh) scale(0.98) rotateZ(-4deg);
+                opacity: 0.9;
+                filter: blur(1px);
+            }
+            100% {
+                transform: translateY(-125vh) scale(0.82) rotateZ(-7deg);
+                opacity: 0;
+                filter: blur(8px);
+            }
+        }
+
+        @keyframes envelope-fade {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.96) translateY(10px);
+            }
+        }
+
+        @keyframes pulse-text-hide {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* دخول الدعوة الأساسية بعد اختفاء الورقة */
+        #main-content.revealed {
+            animation: main-in 1.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes main-in {
+            0% {
+                opacity: 0;
+                transform: translateY(55px) scale(0.985);
+            }
+            60% {
+                opacity: 1;
+                transform: translateY(-8px) scale(1.002);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         @keyframes pulse {
@@ -604,29 +672,33 @@
                 
                 // Step 1: Open the flap
                 envelopeBtn.classList.add('open');
-                
-                // Step 2: Letter flies up and expands (The "Fagra" effect)
-                setTimeout(() => {
-                    envelopeBtn.classList.add('expand');
-                }, 800); 
 
-                // Step 3: Fade out splash, show site, and trigger Rose Petal Confetti
+                // Step 2: بعد فتح الظرف، الورقة تطكع لفوق وتختفي
+                setTimeout(() => {
+                    envelopeBtn.classList.add('launch');
+                }, 800);
+
+                // Step 3: بعد اختفاء الورقة، تظهر الدعوة الأساسية
                 setTimeout(() => {
                     splashScreen.style.opacity = '0';
-                    setTimeout(() => { splashScreen.style.display = 'none'; }, 1500);
-                    
+
                     document.body.style.overflowY = 'auto'; // Unlock scroll
-                    
+
                     mainContent.style.visibility = 'visible';
-                    mainContent.style.opacity = '1';
-                    
+                    mainContent.classList.add('revealed');
+
                     // Initialize scroll animations AFTER reveal
                     AOS.init({ once: true, offset: 50, duration: 1200, easing: 'ease-out-cubic' });
-                    
+
                     // Trigger custom Rose Petal Confetti
                     fireRosePetals();
-                    
-                }, 1800);
+
+                    // Remove the intro completely after its fade-out
+                    setTimeout(() => {
+                        splashScreen.style.display = 'none';
+                    }, 1500);
+
+                }, 2050);
             });
 
             // Custom Confetti Function (looks like falling rose petals)
