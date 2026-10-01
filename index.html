@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#FFFCF9">
     <title>دعوة زفاف | عمار & فاطمة</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;500;700&family=Great+Vibes&family=Reem+Kufi:wght@400;600&display=swap" rel="stylesheet">
-    
+
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -41,6 +42,10 @@
             background-color: var(--bg-cream);
             color: var(--text-dark);
             overflow: hidden;
+        }
+
+        body.invitation-open {
+            overflow-y: auto;
         }
 
         .font-amiri { font-family: 'Amiri', serif; }
@@ -81,8 +86,8 @@
 
         .envelope-container {
             position: relative;
-            width: 320px;
-            height: 220px;
+            width: min(320px, 88vw);
+            height: min(220px, 61vw);
             cursor: pointer;
             transition: transform 0.4s ease;
         }
@@ -97,9 +102,7 @@
             height: 100%;
             background: #FDF5F6;
             border-radius: 8px;
-            box-shadow:
-                0 20px 50px rgba(183, 110, 121, 0.2),
-                inset 0 0 40px rgba(255,255,255,0.5);
+            box-shadow: 0 20px 50px rgba(183, 110, 121, 0.2), inset 0 0 40px rgba(255,255,255,0.5);
             transform-style: preserve-3d;
         }
 
@@ -146,9 +149,7 @@
             border-top: 115px solid #FFF7F8;
             z-index: 6;
             transform-origin: top;
-            transition:
-                transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
-                z-index 0s 0.4s;
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), z-index 0s 0.4s;
             filter: drop-shadow(0 5px 8px rgba(0,0,0,0.08));
         }
 
@@ -162,9 +163,7 @@
             background: radial-gradient(circle, #D4AF37, #A67C00);
             border-radius: 50%;
             z-index: 7;
-            box-shadow:
-                0 4px 10px rgba(166, 124, 0, 0.4),
-                inset 0 0 5px rgba(255,255,255,0.4);
+            box-shadow: 0 4px 10px rgba(166, 124, 0, 0.4), inset 0 0 5px rgba(255,255,255,0.4);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -256,51 +255,74 @@
         }
 
         @keyframes letter-launch {
-            0% {
-                transform: translateY(-120px) scale(1) rotateZ(0deg);
-                opacity: 1;
-                filter: blur(0);
-            }
-
-            25% {
-                transform: translateY(-180px) scale(1.04) rotateZ(-1.5deg);
-                opacity: 1;
-                filter: blur(0);
-            }
-
-            65% {
-                transform: translateY(-55vh) scale(0.98) rotateZ(-4deg);
-                opacity: 0.9;
-                filter: blur(1px);
-            }
-
-            100% {
-                transform: translateY(-125vh) scale(0.82) rotateZ(-7deg);
-                opacity: 0;
-                filter: blur(8px);
-            }
+            0% { transform: translateY(-120px) scale(1) rotateZ(0deg); opacity: 1; filter: blur(0); }
+            25% { transform: translateY(-180px) scale(1.04) rotateZ(-1.5deg); opacity: 1; filter: blur(0); }
+            65% { transform: translateY(-55vh) scale(0.98) rotateZ(-4deg); opacity: 0.9; filter: blur(1px); }
+            100% { transform: translateY(-125vh) scale(0.82) rotateZ(-7deg); opacity: 0; filter: blur(8px); }
         }
 
         @keyframes envelope-fade {
-            from {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            to {
-                opacity: 0;
-                transform: scale(0.96) translateY(10px);
-            }
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.96) translateY(10px); }
         }
 
         @keyframes pulse-text-hide {
-            from {
-                opacity: 1;
-            }
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
 
-            to {
-                opacity: 0;
-            }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* =========================================
+           WELCOME SCREEN
+           ========================================= */
+
+        #welcome-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(255, 252, 249, 0.97);
+            backdrop-filter: blur(12px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #welcome-screen.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        #welcome-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .welcome-card {
+            width: min(520px, 100%);
+            padding: 42px 28px;
+            text-align: center;
+            background: rgba(255,255,255,0.92);
+            border: 1px solid rgba(212,175,55,0.25);
+            border-radius: 28px;
+            box-shadow: 0 24px 70px rgba(183,110,121,0.14);
+        }
+
+        .welcome-card .mini-line {
+            width: 90px;
+            height: 1px;
+            margin: 18px auto;
+            background: linear-gradient(90deg, transparent, var(--gold-classic), transparent);
         }
 
         /* =========================================
@@ -319,33 +341,10 @@
         }
 
         @keyframes main-in {
-            0% {
-                opacity: 0;
-                transform: translateY(55px) scale(0.985);
-            }
-
-            60% {
-                opacity: 1;
-                transform: translateY(-8px) scale(1.002);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            0% { opacity: 0; transform: translateY(55px) scale(0.985); }
+            60% { opacity: 1; transform: translateY(-8px) scale(1.002); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.4;
-            }
-        }
-
-        /* Floral Corners */
 
         .floral-corner-tl {
             position: absolute;
@@ -404,7 +403,40 @@
             opacity: 0.5;
         }
 
-        /* Timeline */
+        /* =========================================
+           COUPLE SECTION
+           ========================================= */
+
+        .couple-card {
+            position: relative;
+            padding: 48px 24px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(253,245,246,0.9));
+            border: 1px solid rgba(212,175,55,0.22);
+            box-shadow: 0 20px 50px rgba(183,110,121,0.08);
+            overflow: hidden;
+        }
+
+        .couple-heart {
+            width: 74px;
+            height: 74px;
+            margin: 0 auto;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(183,110,121,0.25);
+            box-shadow: 0 10px 30px rgba(183,110,121,0.11);
+        }
+
+        .couple-name {
+            line-height: 1;
+        }
+
+        /* =========================================
+           TIMELINE
+           ========================================= */
 
         .timeline-wrap {
             position: relative;
@@ -417,12 +449,7 @@
             bottom: 0;
             left: 50%;
             width: 2px;
-            background: linear-gradient(
-                to bottom,
-                transparent,
-                var(--rose-gold),
-                transparent
-            );
+            background: linear-gradient(to bottom, transparent, var(--rose-gold), transparent);
             transform: translateX(-50%);
         }
 
@@ -443,7 +470,187 @@
             z-index: 10;
         }
 
+        .event-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .action-btn-primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--rose-gold), #a85e69);
+            box-shadow: 0 10px 20px rgba(183,110,121,0.16);
+        }
+
+        .action-btn-secondary {
+            color: var(--rose-gold);
+            background: #fff;
+            border: 1px solid rgba(183,110,121,0.22);
+        }
+
+        /* =========================================
+           COUNTDOWN
+           ========================================= */
+
+        .countdown-intro {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            border-radius: 999px;
+            background: var(--soft-blush);
+            color: var(--rose-gold);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .countdown-card {
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .countdown-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 18px 40px rgba(183,110,121,0.13);
+        }
+
+        .countdown-number {
+            display: block;
+            min-width: 70px;
+        }
+
+        /* =========================================
+           FLOATING CONTROLS
+           ========================================= */
+
+        .floating-tools {
+            position: fixed;
+            left: 18px;
+            bottom: 18px;
+            z-index: 60;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(12px);
+            transition: opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+        }
+
+        .floating-tools.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .floating-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid rgba(183,110,121,0.2);
+            background: rgba(255,255,255,0.94);
+            color: var(--rose-gold);
+            box-shadow: 0 12px 30px rgba(183,110,121,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .floating-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+        }
+
+        #full-invite-btn {
+            width: auto;
+            padding: 0 16px;
+            border-radius: 999px;
+            gap: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* =========================================
+           PETAL EFFECT
+           ========================================= */
+
+        .petal-burst {
+            position: fixed;
+            top: -10px;
+            width: 8px;
+            height: 12px;
+            background: #B76E79;
+            border-radius: 65% 35% 65% 35%;
+            pointer-events: none;
+            z-index: 55;
+            opacity: 0.75;
+            animation: petal-fall 3.2s linear forwards;
+        }
+
+        @keyframes petal-fall {
+            0% {
+                transform: translate3d(0, -20px, 0) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.8; }
+            100% {
+                transform: translate3d(var(--drift), 105vh, 0) rotate(var(--rotation));
+                opacity: 0;
+            }
+        }
+
+        /* =========================================
+           FOOTER + PATTERN
+           ========================================= */
+
+        .float-anim {
+            animation: floating 4s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-cream); }
+        ::-webkit-scrollbar-thumb { background: var(--rose-gold); border-radius: 10px; }
+
+        .bg-pattern {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background-image: url('https://www.transparenttextures.com/patterns/flower-pattern.png');
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
         @media (max-width: 768px) {
+            .floral-corner-tl,
+            .floral-corner-br {
+                width: 220px;
+                height: 220px;
+            }
+
             .timeline-wrap::before {
                 left: 30px;
             }
@@ -458,189 +665,125 @@
                 left: 30px !important;
                 transform: translateX(-50%) !important;
             }
-        }
 
-        .float-anim {
-            animation: floating 4s ease-in-out infinite;
-        }
-
-        @keyframes floating {
-            0%, 100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-10px);
+            .floating-tools {
+                left: 12px;
+                bottom: 12px;
             }
         }
 
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
+        @media (max-width: 420px) {
+            .envelope-container {
+                width: 290px;
+                height: 200px;
+            }
 
-        ::-webkit-scrollbar-track {
-            background: var(--bg-cream);
-        }
+            .flap-left,
+            .flap-right {
+                border-top-width: 100px;
+                border-bottom-width: 100px;
+            }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--rose-gold);
-            border-radius: 10px;
-        }
+            .flap-left { border-left-width: 145px; }
+            .flap-right { border-right-width: 145px; }
+            .flap-bottom {
+                border-left-width: 145px;
+                border-right-width: 145px;
+                border-bottom-width: 100px;
+            }
 
-        .bg-pattern {
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            background-image: url('https://www.transparenttextures.com/patterns/flower-pattern.png');
-            opacity: 0.05;
-            pointer-events: none;
+            .flap-top {
+                border-left-width: 145px;
+                border-right-width: 145px;
+                border-top-width: 105px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- =========================================
-         SPLASH SCREEN / INTRO
-         ========================================= -->
-
+    <!-- SPLASH / ENVELOPE -->
     <div id="splash-screen">
-
         <div class="envelope-container" id="envelope-btn">
-
             <div class="envelope">
-
                 <div class="letter">
                     <div class="letter-border">
                         <i class="fas fa-rings text-[var(--gold-classic)] text-2xl mb-2 opacity-50"></i>
-
-                        <h2 class="font-amiri text-3xl text-[var(--text-dark)]">
-                            عمار & فاطمة
-                        </h2>
-
-                        <p class="font-cairo text-xs text-gray-400 mt-2">
-                            دعوة زفاف
-                        </p>
+                        <h2 class="font-amiri text-3xl text-[var(--text-dark)]">عمار & فاطمة</h2>
+                        <p class="font-cairo text-xs text-gray-400 mt-2">دعوة زفاف</p>
                     </div>
                 </div>
-
                 <div class="flap-left"></div>
                 <div class="flap-right"></div>
                 <div class="flap-bottom"></div>
                 <div class="flap-top"></div>
-
-                <div class="wax-seal">
-                    ع&ف
-                </div>
-
+                <div class="wax-seal">ع&ف</div>
             </div>
-
-            <div class="pulse-text font-cairo">
-                اضغط لفتح الدعوة
-            </div>
-
+            <div class="pulse-text font-cairo">اضغط لفتح الدعوة</div>
         </div>
-
     </div>
 
+    <!-- WELCOME SCREEN -->
+    <div id="welcome-screen" aria-hidden="true">
+        <div class="welcome-card">
+            <div class="couple-heart">
+                <i class="fas fa-heart text-[var(--rose-gold)] text-2xl"></i>
+            </div>
 
-    <!-- =========================================
-         MAIN SITE CONTENT
-         ========================================= -->
+            <p class="font-kufi text-[var(--rose-gold)] text-sm mt-6">أهلًا وسهلًا بكم</p>
 
+            <h2 class="font-amiri text-4xl md:text-5xl text-[var(--text-dark)] mt-2">
+                يسعدنا حضوركم
+            </h2>
+
+            <div class="mini-line"></div>
+
+            <p class="font-cairo text-base md:text-lg text-[var(--text-muted)] leading-8">
+                ومشاركتنا فرحتنا في أجمل ليلة من ليالينا
+            </p>
+
+            <p class="font-english text-4xl text-[var(--rose-gold)] mt-4">
+                Ammar &amp; Fatma
+            </p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
     <div id="main-content">
 
         <div class="bg-pattern fixed"></div>
 
         <!-- HERO -->
-
-        <section
-            id="hero"
-            class="min-h-screen relative flex flex-col items-center justify-center pt-10 px-4 overflow-hidden"
-        >
-
+        <section id="hero" class="min-h-screen relative flex flex-col items-center justify-center pt-10 px-4 overflow-hidden">
             <div class="floral-corner-tl"></div>
             <div class="floral-corner-br"></div>
 
             <div class="z-10 text-center w-full max-w-4xl glass-panel p-8 md:p-16 mt-12 md:mt-0">
 
-                <div
-                    data-aos="fade-down"
-                    data-aos-duration="1500"
-                    class="mb-6"
-                >
+                <div data-aos="fade-down" data-aos-duration="1500" class="mb-6">
                     <p class="font-kufi text-[var(--text-muted)] text-sm md:text-lg tracking-[0.1em] mb-4">
                         بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
                     </p>
                 </div>
 
                 <div class="float-anim mb-8">
-
-                    <svg
-                        class="w-20 md:w-24 mx-auto"
-                        viewBox="0 0 100 100"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <circle
-                            cx="40"
-                            cy="50"
-                            r="25"
-                            stroke="#D4AF37"
-                            stroke-width="3"
-                            fill="transparent"
-                        />
-
-                        <circle
-                            cx="60"
-                            cy="50"
-                            r="25"
-                            stroke="#B76E79"
-                            stroke-width="3"
-                            fill="transparent"
-                        />
-
-                        <path
-                            d="M43 32 L47 25 L51 32 Z"
-                            fill="#D4AF37"
-                        />
+                    <svg class="w-20 md:w-24 mx-auto" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="40" cy="50" r="25" stroke="#D4AF37" stroke-width="3" fill="transparent"/>
+                        <circle cx="60" cy="50" r="25" stroke="#B76E79" stroke-width="3" fill="transparent"/>
+                        <path d="M43 32 L47 25 L51 32 Z" fill="#D4AF37"/>
                     </svg>
-
                 </div>
 
-                <div
-                    data-aos="zoom-in"
-                    data-aos-duration="2000"
-                    class="relative"
-                >
-
-                    <h1
-                        class="font-amiri text-6xl md:text-8xl lg:text-9xl text-[var(--text-dark)] font-bold leading-tight flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 drop-shadow-sm"
-                    >
-
-                        <span class="text-gold">
-                            عمار
-                        </span>
-
-                        <span class="font-english text-5xl md:text-7xl text-[var(--text-muted)] font-normal px-4">
-                            &amp;
-                        </span>
-
-                        <span class="text-gold">
-                            فاطمة
-                        </span>
-
+                <div data-aos="zoom-in" data-aos-duration="2000" class="relative">
+                    <h1 class="font-amiri text-6xl md:text-8xl lg:text-9xl text-[var(--text-dark)] font-bold leading-tight flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 drop-shadow-sm">
+                        <span class="text-gold">عمار</span>
+                        <span class="font-english text-5xl md:text-7xl text-[var(--text-muted)] font-normal px-4">&amp;</span>
+                        <span class="text-gold">فاطمة</span>
                     </h1>
-
                 </div>
 
-                <div
-                    data-aos="fade-up"
-                    data-aos-duration="1500"
-                    data-aos-delay="500"
-                    class="mt-10"
-                >
-
+                <div data-aos="fade-up" data-aos-duration="1500" data-aos-delay="500" class="mt-10">
                     <div class="section-divider">
                         <i class="fas fa-heart text-[var(--rose-gold)] text-xs"></i>
                     </div>
@@ -652,7 +795,6 @@
                     <p class="font-kufi text-lg text-[var(--rose-gold)] mt-6 bg-[var(--soft-blush)] inline-block px-6 py-2 rounded-full shadow-sm">
                         السادس من أكتوبر ٢٠٢٦
                     </p>
-
                 </div>
 
             </div>
@@ -660,87 +802,91 @@
             <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce opacity-60">
                 <i class="fas fa-chevron-down text-[var(--rose-gold)] text-xl"></i>
             </div>
-
         </section>
 
-
         <!-- VERSE -->
-
         <section class="py-20 px-4 relative z-10">
-
             <div class="container mx-auto max-w-3xl text-center">
-
-                <div
-                    data-aos="fade-up"
-                    class="glass-panel p-10 md:p-14 border-t-4 border-t-[var(--rose-gold)]"
-                >
-
+                <div data-aos="fade-up" class="glass-panel p-10 md:p-14 border-t-4 border-t-[var(--rose-gold)]">
                     <i class="fas fa-quote-right text-3xl text-[var(--gold-classic)] opacity-30 mb-6 block"></i>
 
-                    <h2
-                        class="font-amiri text-2xl md:text-4xl text-[var(--text-dark)] leading-loose md:leading-loose"
-                        style="line-height: 2;"
-                    >
+                    <h2 class="font-amiri text-2xl md:text-4xl text-[var(--text-dark)]" style="line-height: 2;">
                         "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً"
                     </h2>
 
                     <p class="font-cairo text-[var(--rose-gold)] mt-6 font-bold">
                         صدق الله العظيم
                     </p>
-
                 </div>
-
             </div>
-
         </section>
 
-
-        <!-- FAMILIES -->
-
-        <section
-            id="families"
-            class="py-20 px-4 relative z-10 bg-[var(--soft-blush)]/30"
-        >
-
-            <div class="container mx-auto max-w-6xl">
-
-                <div
-                    class="text-center mb-16"
-                    data-aos="fade-up"
-                >
-
-                    <h2 class="font-kufi text-4xl text-[var(--text-dark)] inline-block relative">
-
-                        عائلات العروسين
-
-                        <div class="absolute -bottom-4 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[var(--rose-gold)] to-transparent"></div>
-
-                    </h2>
-
+        <!-- COUPLE -->
+        <section id="couple" class="py-20 px-4 relative z-10">
+            <div class="container mx-auto max-w-4xl">
+                <div class="text-center mb-12" data-aos="fade-up">
+                    <p class="font-kufi text-[var(--rose-gold)] text-sm tracking-widest">العروسين</p>
+                    <h2 class="font-amiri text-4xl md:text-5xl text-[var(--text-dark)] mt-2">حكاية عمر وفرحة واحدة</h2>
+                    <div class="section-divider"></div>
                 </div>
 
+                <div class="couple-card text-center" data-aos="zoom-in">
+                    <div class="absolute -top-16 -left-16 w-40 h-40 rounded-full bg-[var(--soft-blush)] opacity-60"></div>
+                    <div class="absolute -bottom-16 -right-16 w-40 h-40 rounded-full bg-[#F8ECEE] opacity-60"></div>
+
+                    <div class="relative z-10">
+                        <p class="font-cairo text-[var(--text-muted)] text-sm">بكل حب وفرحة</p>
+
+                        <div class="mt-8 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
+                            <div>
+                                <p class="font-kufi text-xs text-[var(--gold-classic)] mb-3">العريس</p>
+                                <h3 class="font-amiri text-5xl md:text-6xl text-[var(--rose-gold)] couple-name">عمار</h3>
+                            </div>
+
+                            <div class="couple-heart shrink-0">
+                                <i class="fas fa-heart text-[var(--rose-gold)] text-2xl animate-pulse"></i>
+                            </div>
+
+                            <div>
+                                <p class="font-kufi text-xs text-[var(--gold-classic)] mb-3">العروسة</p>
+                                <h3 class="font-amiri text-5xl md:text-6xl text-[var(--rose-gold)] couple-name">فاطمة</h3>
+                            </div>
+                        </div>
+
+                        <p class="font-amiri text-2xl md:text-3xl text-[var(--text-dark)] mt-10 leading-loose">
+                            واجتمع قلبان على المحبة، وابتدت حكاية جديدة
+                        </p>
+
+                        <div class="section-divider !my-6">
+                            <i class="fas fa-rings-wedding text-[var(--gold-classic)]"></i>
+                        </div>
+
+                        <p class="font-cairo text-sm md:text-base text-[var(--text-muted)]">
+                            ٦ أكتوبر ٢٠٢٦ · ٦:٠٠ مساءً
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAMILIES -->
+        <section id="families" class="py-20 px-4 relative z-10 bg-[var(--soft-blush)]/30">
+            <div class="container mx-auto max-w-6xl">
+                <div class="text-center mb-16" data-aos="fade-up">
+                    <h2 class="font-kufi text-4xl text-[var(--text-dark)] inline-block relative">
+                        عائلات العروسين
+                        <div class="absolute -bottom-4 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[var(--rose-gold)] to-transparent"></div>
+                    </h2>
+                </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
 
                     <!-- Groom -->
-
-                    <div
-                        data-aos="fade-left"
-                        class="glass-panel p-8 text-center md:text-right hover:-translate-y-2 transition duration-300"
-                    >
-
+                    <div data-aos="fade-left" class="glass-panel p-8 text-center md:text-right hover:-translate-y-2 transition duration-300">
                         <div class="mb-6 text-center">
-
-                            <p class="text-[var(--gold-classic)] text-sm font-bold tracking-wider mb-2">
-                                نجل الأول محاسب
-                            </p>
-
-                            <h3 class="font-amiri text-5xl text-[var(--rose-gold)] mb-4">
-                                عـمـار
-                            </h3>
-
+                            <p class="text-[var(--gold-classic)] text-sm font-bold tracking-wider mb-2">نجل الأول محاسب</p>
+                            <h3 class="font-amiri text-5xl text-[var(--rose-gold)] mb-4">عـمـار</h3>
                             <div class="w-16 h-1 bg-[var(--text-muted)]/20 mx-auto rounded"></div>
-
                         </div>
 
                         <h4 class="font-kufi text-2xl text-[var(--text-dark)] mb-6 text-center md:text-right">
@@ -749,53 +895,22 @@
                         </h4>
 
                         <ul class="space-y-4 font-cairo text-[var(--text-muted)] text-lg">
-
-                            <li class="flex items-center justify-center md:justify-start">
-                                <span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>
-                                كابتن / رضا محمد عبد العال
-                            </li>
-
-                            <li class="flex items-center justify-center md:justify-start">
-                                <span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>
-                                كابتن / محمد رضا عبد العال
-                            </li>
-
-                            <li class="flex items-center justify-center md:justify-start">
-                                <span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>
-                                كابتن / مصعب رضا عبد العال
-                            </li>
-
+                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>كابتن / رضا محمد عبد العال</li>
+                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>كابتن / محمد رضا عبد العال</li>
+                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>كابتن / مصعب رضا عبد العال</li>
                             <li class="pt-4 mt-4 border-t border-gray-200 text-[var(--text-dark)] font-bold text-center md:text-right">
                                 الحاج / حسين أحمد حسين
-                                <span class="text-sm font-normal text-[var(--rose-gold)]">
-                                    (جد العريس)
-                                </span>
+                                <span class="text-sm font-normal text-[var(--rose-gold)]">(جد العريس)</span>
                             </li>
-
                         </ul>
-
                     </div>
 
-
                     <!-- Bride -->
-
-                    <div
-                        data-aos="fade-right"
-                        class="glass-panel p-8 text-center md:text-right hover:-translate-y-2 transition duration-300"
-                    >
-
+                    <div data-aos="fade-right" class="glass-panel p-8 text-center md:text-right hover:-translate-y-2 transition duration-300">
                         <div class="mb-6 text-center">
-
-                            <p class="text-[var(--gold-classic)] text-sm font-bold tracking-wider mb-2">
-                                كريمة الثامن الأستاذه
-                            </p>
-
-                            <h3 class="font-amiri text-5xl text-[var(--rose-gold)] mb-4">
-                                فـاطـمـة
-                            </h3>
-
+                            <p class="text-[var(--gold-classic)] text-sm font-bold tracking-wider mb-2">كريمة الثامن الأستاذه</p>
+                            <h3 class="font-amiri text-5xl text-[var(--rose-gold)] mb-4">فـاطـمـة</h3>
                             <div class="w-16 h-1 bg-[var(--text-muted)]/20 mx-auto rounded"></div>
-
                         </div>
 
                         <h4 class="font-kufi text-2xl text-[var(--text-dark)] mb-6 text-center md:text-right">
@@ -804,193 +919,77 @@
                         </h4>
 
                         <ul class="space-y-4 font-cairo text-[var(--text-muted)] text-lg">
-
-                            <li class="flex items-center justify-center md:justify-start">
-                                <span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>
-                                <span class="text-[var(--rose-gold)] font-bold ml-1">
-                                    المرحوم الشيخ /
-                                </span>
-                                عبد الحميد الطويل
-                            </li>
-
-                            <li class="flex items-center justify-center md:justify-start">
-                                <span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>
-                                <span class="text-[var(--rose-gold)] font-bold ml-1">
-                                    المرحوم /
-                                </span>
-                                محي الدين عبد الحميد الطويل
-                            </li>
-
-                            <li class="flex items-center justify-center md:justify-start">
-                                <span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>
-                                <span class="text-[var(--text-dark)] font-bold ml-1">
-                                    الحاج /
-                                </span>
-                                محمد عبد الحميد الطويل
-                            </li>
-
-                            <li class="flex items-center justify-center md:justify-start">
-                                <span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>
-                                <span class="text-[var(--text-dark)] font-bold ml-1">
-                                    المهندس /
-                                </span>
-                                أحمد عبد الحميد الطويل
-                            </li>
-
-                            <li class="flex items-center justify-center md:justify-start">
-                                <span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>
-                                <span class="text-[var(--text-dark)] font-bold ml-1">
-                                    الحاج /
-                                </span>
-                                مصطفى عبد الحميد الطويل
-                            </li>
-
-                            <li class="flex items-center justify-center md:justify-start">
-                                <span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>
-                                <span class="text-[var(--text-dark)] font-bold ml-1">
-                                    المحاسب /
-                                </span>
-                                عبد الوهاب عبد الحميد الطويل
-                            </li>
-
-                            <li class="flex items-center justify-center md:justify-start">
-                                <span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span>
-                                <span class="text-[var(--text-dark)] font-bold ml-1">
-                                    المهندس /
-                                </span>
-                                عبد الحميد أحمد عبد الحميد الطويل
-                            </li>
-
+                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--rose-gold)] font-bold ml-1">المرحوم الشيخ /</span> عبد الحميد الطويل</li>
+                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--rose-gold)] font-bold ml-1">المرحوم /</span> محي الدين عبد الحميد الطويل</li>
+                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--text-dark)] font-bold ml-1">الحاج /</span> محمد عبد الحميد الطويل</li>
+                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--text-dark)] font-bold ml-1">المهندس /</span> أحمد عبد الحميد الطويل</li>
+                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--text-dark)] font-bold ml-1">الحاج /</span> مصطفى عبد الحميد الطويل</li>
+                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--text-dark)] font-bold ml-1">المحاسب /</span> عبد الوهاب عبد الحميد الطويل</li>
+                            <li class="flex items-center justify-center md:justify-start"><span class="w-2 h-2 bg-[var(--gold-classic)] rounded-full ml-3 inline-block"></span><span class="text-[var(--text-dark)] font-bold ml-1">المهندس /</span> عبد الحميد أحمد عبد الحميد الطويل</li>
                         </ul>
-
                     </div>
-
                 </div>
-
             </div>
-
         </section>
 
-
         <!-- EVENTS -->
-
-        <section
-            id="events"
-            class="py-24 px-4 relative z-10"
-        >
-
+        <section id="events" class="py-24 px-4 relative z-10">
             <div class="container mx-auto max-w-5xl">
 
-                <div
-                    class="text-center mb-20"
-                    data-aos="fade-up"
-                >
-
-                    <h2 class="font-amiri text-4xl text-gold inline-block">
-                        وذلك بمشيئة الله تعالى
-                    </h2>
-
+                <div class="text-center mb-20" data-aos="fade-up">
+                    <h2 class="font-amiri text-4xl text-gold inline-block">وذلك بمشيئة الله تعالى</h2>
                     <div class="section-divider"></div>
-
                 </div>
-
 
                 <div class="timeline-wrap py-8">
 
                     <!-- Event 1 -->
-
-                    <div
-                        class="timeline-item flex flex-col md:flex-row items-center w-full mb-16 relative"
-                        data-aos="fade-up"
-                    >
-
+                    <div class="timeline-item flex flex-col md:flex-row items-center w-full mb-16 relative" data-aos="fade-up">
                         <div class="md:w-1/2 md:pl-12 text-center md:text-left w-full order-2 md:order-1 mt-6 md:mt-0">
-
                             <div class="glass-panel p-6 inline-block w-full max-w-sm">
-
-                                <h4 class="font-kufi text-2xl text-[var(--rose-gold)] mb-2">
-                                    حنة العريس
-                                </h4>
-
+                                <h4 class="font-kufi text-2xl text-[var(--rose-gold)] mb-2">حنة العريس</h4>
                                 <p class="font-cairo text-[var(--text-muted)] text-sm mb-3 font-bold">
                                     <i class="far fa-calendar text-[var(--gold-classic)] ml-2"></i>
                                     الأحد 4 أكتوبر 2026
                                 </p>
-
                                 <p class="font-cairo text-[var(--text-dark)] bg-white/50 py-2 rounded-md">
                                     <i class="fas fa-map-marker-alt text-[var(--rose-gold)] ml-2 text-sm"></i>
                                     أمام منزل والد العريس
                                 </p>
-
                             </div>
-
                         </div>
-
-                        <div class="timeline-icon top-0 md:top-1/2 order-1 md:order-2">
-                            <i class="fas fa-male"></i>
-                        </div>
-
+                        <div class="timeline-icon top-0 md:top-1/2 order-1 md:order-2"><i class="fas fa-male"></i></div>
                         <div class="md:w-1/2 w-full order-3"></div>
-
                     </div>
 
-
                     <!-- Event 2 -->
-
-                    <div
-                        class="timeline-item flex flex-col md:flex-row-reverse items-center w-full mb-16 relative"
-                        data-aos="fade-up"
-                    >
-
+                    <div class="timeline-item flex flex-col md:flex-row-reverse items-center w-full mb-16 relative" data-aos="fade-up">
                         <div class="md:w-1/2 md:pr-12 text-center md:text-right w-full order-2 md:order-1 mt-6 md:mt-0">
-
                             <div class="glass-panel p-6 inline-block w-full max-w-sm">
-
-                                <h4 class="font-kufi text-2xl text-[var(--rose-gold)] mb-2">
-                                    حنة العروسة
-                                </h4>
-
+                                <h4 class="font-kufi text-2xl text-[var(--rose-gold)] mb-2">حنة العروسة</h4>
                                 <p class="font-cairo text-[var(--text-muted)] text-sm mb-3 font-bold">
                                     <i class="far fa-calendar text-[var(--gold-classic)] ml-2"></i>
                                     الإثنين 5 أكتوبر 2026
                                 </p>
-
                                 <p class="font-cairo text-[var(--text-dark)] bg-white/50 py-2 rounded-md">
                                     <i class="fas fa-map-marker-alt text-[var(--rose-gold)] ml-2 text-sm"></i>
                                     بملعب الغراقه
                                 </p>
-
                             </div>
-
                         </div>
-
-                        <div class="timeline-icon top-0 md:top-1/2 order-1 md:order-2">
-                            <i class="fas fa-female"></i>
-                        </div>
-
+                        <div class="timeline-icon top-0 md:top-1/2 order-1 md:order-2"><i class="fas fa-female"></i></div>
                         <div class="md:w-1/2 w-full order-3"></div>
-
                     </div>
 
-
                     <!-- Event 3 -->
-
-                    <div
-                        class="timeline-item flex flex-col md:flex-row items-center w-full relative"
-                        data-aos="fade-up"
-                    >
-
+                    <div class="timeline-item flex flex-col md:flex-row items-center w-full relative" data-aos="fade-up">
                         <div class="md:w-1/2 md:pl-12 text-center md:text-left w-full order-2 md:order-1 mt-6 md:mt-0">
-
                             <div class="glass-panel p-8 inline-block w-full max-w-sm border-2 border-[var(--rose-gold)] shadow-[0_0_20px_rgba(183,110,121,0.2)]">
-
-                                <h4 class="font-amiri text-4xl text-gold mb-2">
-                                    حفل الزفاف
-                                </h4>
+                                <h4 class="font-amiri text-4xl text-gold mb-2">حفل الزفاف</h4>
 
                                 <p class="font-cairo text-[var(--text-dark)] text-sm mb-4 font-bold border-b border-gray-200 pb-2">
                                     <i class="far fa-calendar text-[var(--gold-classic)] ml-2"></i>
-                                    الثلاثاء 6 أكتوبر 2026
+                                    الثلاثاء 6 أكتوبر 2026 · 6:00 مساءً
                                 </p>
 
                                 <p class="font-cairo text-[var(--rose-gold)] font-bold text-lg">
@@ -998,8 +997,18 @@
                                     بقاعة مارشال - أجا
                                 </p>
 
-                            </div>
+                                <div class="event-actions">
+                                    <button id="maps-btn" class="action-btn action-btn-primary" type="button">
+                                        <i class="fas fa-location-arrow"></i>
+                                        فتح الخريطة
+                                    </button>
 
+                                    <button id="calendar-btn" class="action-btn action-btn-secondary" type="button">
+                                        <i class="far fa-calendar-plus"></i>
+                                        أضف للتقويم
+                                    </button>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="timeline-icon top-0 md:top-1/2 order-1 md:order-2 !bg-[var(--rose-gold)] !text-white !border-[var(--gold-classic)] !w-12 !h-12 shadow-[0_0_20px_rgba(212,175,55,0.5)]">
@@ -1007,130 +1016,92 @@
                         </div>
 
                         <div class="md:w-1/2 w-full order-3"></div>
-
                     </div>
 
                 </div>
-
             </div>
-
         </section>
 
-
         <!-- COUNTDOWN -->
-
-        <section class="py-20 px-4 text-center relative z-10">
-
+        <section id="countdown" class="py-20 px-4 text-center relative z-10">
             <div class="container mx-auto max-w-4xl">
+                <div class="countdown-intro" data-aos="fade-up">
+                    <i class="far fa-clock"></i>
+                    <span>العد التنازلي للفرحة</span>
+                </div>
 
-                <h2
-                    class="font-amiri text-4xl mb-12 text-[var(--text-dark)]"
-                    data-aos="fade-up"
-                >
+                <h2 class="font-amiri text-4xl md:text-5xl mb-4 text-[var(--text-dark)]" data-aos="fade-up">
                     في انتظاركم بكل حب
                 </h2>
 
-                <div
-                    class="flex flex-wrap justify-center gap-4 md:gap-8"
-                    dir="ltr"
-                    data-aos="zoom-in"
-                >
+                <p class="font-cairo text-sm md:text-base text-[var(--text-muted)] mb-10" data-aos="fade-up" data-aos-delay="100">
+                    الثلاثاء 6 أكتوبر 2026 · الساعة 6:00 مساءً
+                </p>
 
-                    <div class="glass-panel w-20 h-24 md:w-32 md:h-32 flex flex-col items-center justify-center rounded-2xl">
+                <div class="flex flex-wrap justify-center gap-4 md:gap-8" dir="ltr" data-aos="zoom-in">
 
-                        <span
-                            id="days"
-                            class="font-amiri text-3xl md:text-5xl text-[var(--rose-gold)] font-bold"
-                        >
-                            00
-                        </span>
-
-                        <span class="font-cairo text-xs md:text-sm text-[var(--text-muted)] mt-1 font-bold">
-                            يوم
-                        </span>
-
+                    <div class="countdown-card glass-panel w-20 h-24 md:w-32 md:h-32 flex flex-col items-center justify-center rounded-2xl">
+                        <span id="days" class="countdown-number font-amiri text-3xl md:text-5xl text-[var(--rose-gold)] font-bold">00</span>
+                        <span class="font-cairo text-xs md:text-sm text-[var(--text-muted)] mt-1 font-bold">يوم</span>
                     </div>
 
-
-                    <div class="glass-panel w-20 h-24 md:w-32 md:h-32 flex flex-col items-center justify-center rounded-2xl">
-
-                        <span
-                            id="hours"
-                            class="font-amiri text-3xl md:text-5xl text-[var(--rose-gold)] font-bold"
-                        >
-                            00
-                        </span>
-
-                        <span class="font-cairo text-xs md:text-sm text-[var(--text-muted)] mt-1 font-bold">
-                            ساعة
-                        </span>
-
+                    <div class="countdown-card glass-panel w-20 h-24 md:w-32 md:h-32 flex flex-col items-center justify-center rounded-2xl">
+                        <span id="hours" class="countdown-number font-amiri text-3xl md:text-5xl text-[var(--rose-gold)] font-bold">00</span>
+                        <span class="font-cairo text-xs md:text-sm text-[var(--text-muted)] mt-1 font-bold">ساعة</span>
                     </div>
 
-
-                    <div class="glass-panel w-20 h-24 md:w-32 md:h-32 flex flex-col items-center justify-center rounded-2xl">
-
-                        <span
-                            id="minutes"
-                            class="font-amiri text-3xl md:text-5xl text-[var(--rose-gold)] font-bold"
-                        >
-                            00
-                        </span>
-
-                        <span class="font-cairo text-xs md:text-sm text-[var(--text-muted)] mt-1 font-bold">
-                            دقيقة
-                        </span>
-
+                    <div class="countdown-card glass-panel w-20 h-24 md:w-32 md:h-32 flex flex-col items-center justify-center rounded-2xl">
+                        <span id="minutes" class="countdown-number font-amiri text-3xl md:text-5xl text-[var(--rose-gold)] font-bold">00</span>
+                        <span class="font-cairo text-xs md:text-sm text-[var(--text-muted)] mt-1 font-bold">دقيقة</span>
                     </div>
 
-
-                    <div class="glass-panel w-20 h-24 md:w-32 md:h-32 flex flex-col items-center justify-center rounded-2xl bg-[var(--rose-gold)]/5 border-[var(--rose-gold)]">
-
-                        <span
-                            id="seconds"
-                            class="font-amiri text-3xl md:text-5xl text-[var(--gold-classic)] font-bold"
-                        >
-                            00
-                        </span>
-
-                        <span class="font-cairo text-xs md:text-sm text-[var(--rose-gold)] mt-1 font-bold">
-                            ثانية
-                        </span>
-
+                    <div class="countdown-card glass-panel w-20 h-24 md:w-32 md:h-32 flex flex-col items-center justify-center rounded-2xl bg-[var(--rose-gold)]/5 border-[var(--rose-gold)]">
+                        <span id="seconds" class="countdown-number font-amiri text-3xl md:text-5xl text-[var(--gold-classic)] font-bold">00</span>
+                        <span class="font-cairo text-xs md:text-sm text-[var(--rose-gold)] mt-1 font-bold">ثانية</span>
                     </div>
 
                 </div>
 
+                <div id="countdown-finished" class="hidden mt-8 font-amiri text-2xl text-[var(--rose-gold)]">
+                    اليوم فرحتنا اكتملت ❤️
+                </div>
             </div>
-
         </section>
 
-
         <!-- FOOTER -->
-
         <footer class="py-12 text-center relative z-10 mt-10">
-
-            <div
-                class="container mx-auto px-4"
-                data-aos="fade-up"
-            >
-
+            <div class="container mx-auto px-4" data-aos="fade-up">
                 <div class="section-divider mb-8">
                     <i class="fab fa-pagelines text-[var(--rose-gold)] text-xl"></i>
                 </div>
-
                 <h2 class="font-amiri text-3xl md:text-5xl text-gold mb-6">
                     والعاقبة عندكم في المسرات
                 </h2>
-
+                <p class="font-cairo text-sm text-[var(--text-muted)]">
+                    عمار &amp; فاطمة · بكل حب
+                </p>
             </div>
-
         </footer>
 
     </div>
 
+    <!-- FLOATING TOOLS -->
+    <div class="floating-tools" id="floating-tools">
+        <a id="full-invite-btn" class="floating-btn" href="#hero" aria-label="العودة لبداية الدعوة">
+            <i class="fas fa-scroll"></i>
+            <span>دعوة كاملة</span>
+        </a>
 
-    <!-- AOS -->
+        <button id="music-btn" class="floating-btn" type="button" aria-label="تشغيل الموسيقى" title="تشغيل الموسيقى">
+            <i id="music-icon" class="fas fa-volume-xmark"></i>
+        </button>
+    </div>
+
+    <!-- Put your music file next to this HTML file with this exact name: music.mp3 -->
+    <audio id="wedding-music" loop preload="auto" playsinline>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
     <script>
@@ -1157,7 +1128,6 @@
 
             forceTop();
 
-
             /* =========================================
                ELEMENTS
                ========================================= */
@@ -1165,17 +1135,28 @@
             const splashScreen = document.getElementById('splash-screen');
             const envelopeBtn = document.getElementById('envelope-btn');
             const mainContent = document.getElementById('main-content');
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const floatingTools = document.getElementById('floating-tools');
+            const musicBtn = document.getElementById('music-btn');
+            const musicIcon = document.getElementById('music-icon');
+            const weddingMusic = document.getElementById('wedding-music');
+            const mapsBtn = document.getElementById('maps-btn');
+            const calendarBtn = document.getElementById('calendar-btn');
+            const fullInviteBtn = document.getElementById('full-invite-btn');
 
+            let invitationOpened = false;
+            let welcomeTimer = null;
+            let lastPetalTime = 0;
 
             /* =========================================
                ROSE PETALS
                ========================================= */
 
             function fireRosePetals() {
+                if (typeof confetti !== 'function') return;
 
                 const duration = 5 * 1000;
                 const animationEnd = Date.now() + duration;
-
                 const defaults = {
                     startVelocity: 25,
                     spread: 360,
@@ -1188,7 +1169,6 @@
                 }
 
                 const interval = setInterval(() => {
-
                     const timeLeft = animationEnd - Date.now();
 
                     if (timeLeft <= 0) {
@@ -1197,194 +1177,284 @@
                     }
 
                     const particleCount = 20 * (timeLeft / duration);
+                    const colors = ['#B76E79', '#FDF5F6', '#D4AF37', '#FFFFFF'];
 
-                    const colors = [
-                        '#B76E79',
-                        '#FDF5F6',
-                        '#D4AF37',
-                        '#FFFFFF'
-                    ];
+                    confetti(Object.assign({}, defaults, {
+                        particleCount,
+                        colors,
+                        origin: {
+                            x: randomInRange(0.1, 0.3),
+                            y: Math.random() - 0.2
+                        }
+                    }));
 
-                    confetti(
-                        Object.assign({}, defaults, {
-                            particleCount,
-                            colors,
-                            origin: {
-                                x: randomInRange(0.1, 0.3),
-                                y: Math.random() - 0.2
-                            }
-                        })
-                    );
-
-                    confetti(
-                        Object.assign({}, defaults, {
-                            particleCount,
-                            colors,
-                            origin: {
-                                x: randomInRange(0.7, 0.9),
-                                y: Math.random() - 0.2
-                            }
-                        })
-                    );
-
+                    confetti(Object.assign({}, defaults, {
+                        particleCount,
+                        colors,
+                        origin: {
+                            x: randomInRange(0.7, 0.9),
+                            y: Math.random() - 0.2
+                        }
+                    }));
                 }, 250);
             }
 
+            /* Lightweight petals while browsing */
+            function createScrollPetals(count = 5) {
+                for (let i = 0; i < count; i++) {
+                    const petal = document.createElement('span');
+                    petal.className = 'petal-burst';
+                    petal.style.left = `${8 + Math.random() * 84}%`;
+                    petal.style.setProperty('--drift', `${-100 + Math.random() * 200}px`);
+                    petal.style.setProperty('--rotation', `${180 + Math.random() * 540}deg`);
+                    petal.style.animationDuration = `${2.5 + Math.random() * 1.6}s`;
+                    petal.style.background = ['#B76E79', '#D4AF37', '#F6DCE0', '#FFFFFF'][Math.floor(Math.random() * 4)];
+                    document.body.appendChild(petal);
+
+                    setTimeout(() => petal.remove(), 4300);
+                }
+            }
+
+            function handleScrollPetals() {
+                if (!invitationOpened) return;
+
+                const now = Date.now();
+                if (now - lastPetalTime < 1300) return;
+
+                if (Math.abs(window.scrollY % 420) < 14 || window.scrollY > 80) {
+                    lastPetalTime = now;
+                    createScrollPetals(window.innerWidth < 768 ? 3 : 5);
+                }
+            }
+
+            /* =========================================
+               MUSIC
+               ========================================= */
+
+            async function startMusic() {
+                try {
+                    await weddingMusic.play();
+                    musicIcon.className = 'fas fa-volume-high';
+                    musicBtn.setAttribute('aria-label', 'إيقاف الموسيقى');
+                    musicBtn.setAttribute('title', 'إيقاف الموسيقى');
+                } catch (error) {
+                    musicIcon.className = 'fas fa-volume-xmark';
+                    musicBtn.setAttribute('aria-label', 'تشغيل الموسيقى');
+                    musicBtn.setAttribute('title', 'تشغيل الموسيقى');
+                }
+            }
+
+            function toggleMusic() {
+                if (weddingMusic.paused) {
+                    startMusic();
+                } else {
+                    weddingMusic.pause();
+                    musicIcon.className = 'fas fa-volume-xmark';
+                    musicBtn.setAttribute('aria-label', 'تشغيل الموسيقى');
+                    musicBtn.setAttribute('title', 'تشغيل الموسيقى');
+                }
+            }
+
+            /* =========================================
+               MAPS
+               ========================================= */
+
+            function openMap() {
+                const place = 'قاعة مارشال - أجا - الدقهلية - مصر';
+                const url = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(place);
+                window.open(url, '_blank', 'noopener,noreferrer');
+            }
+
+            /* =========================================
+               CALENDAR
+               ========================================= */
+
+            function pad(number) {
+                return String(number).padStart(2, '0');
+            }
+
+            function toICSDate(date) {
+                return [
+                    date.getUTCFullYear(),
+                    pad(date.getUTCMonth() + 1),
+                    pad(date.getUTCDate()),
+                    'T',
+                    pad(date.getUTCHours()),
+                    pad(date.getUTCMinutes()),
+                    pad(date.getUTCSeconds()),
+                    'Z'
+                ].join('');
+            }
+
+            function downloadCalendar() {
+                const start = new Date('2026-10-06T18:00:00+03:00');
+                const end = new Date('2026-10-06T23:00:00+03:00');
+
+                const ics = [
+                    'BEGIN:VCALENDAR',
+                    'VERSION:2.0',
+                    'PRODID:-//Ammar Fatma Wedding//AR',
+                    'CALSCALE:GREGORIAN',
+                    'BEGIN:VEVENT',
+                    `DTSTART:${toICSDate(start)}`,
+                    `DTEND:${toICSDate(end)}`,
+                    'SUMMARY:حفل زفاف عمار وفاطمة',
+                    'LOCATION:قاعة مارشال - أجا - الدقهلية',
+                    'DESCRIPTION:حفل زفاف عمار وفاطمة - الثلاثاء 6 أكتوبر 2026 الساعة 6 مساءً',
+                    'STATUS:CONFIRMED',
+                    'END:VEVENT',
+                    'END:VCALENDAR'
+                ].join('\r\n');
+
+                const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'ammar-fatma-wedding.ics';
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+            }
+
+            /* =========================================
+               WELCOME SCREEN
+               ========================================= */
+
+            function showWelcome() {
+                welcomeScreen.classList.add('show');
+                welcomeScreen.setAttribute('aria-hidden', 'false');
+
+                clearTimeout(welcomeTimer);
+                welcomeTimer = setTimeout(() => {
+                    welcomeScreen.classList.remove('show');
+                    welcomeScreen.classList.add('hide');
+                    welcomeScreen.setAttribute('aria-hidden', 'true');
+                }, 2600);
+            }
+
+            welcomeScreen.addEventListener('click', () => {
+                welcomeScreen.classList.remove('show');
+                welcomeScreen.classList.add('hide');
+                welcomeScreen.setAttribute('aria-hidden', 'true');
+                clearTimeout(welcomeTimer);
+            });
 
             /* =========================================
                VIP ENTRANCE
                ========================================= */
 
             envelopeBtn.addEventListener('click', () => {
+                if (invitationOpened) return;
+                invitationOpened = true;
 
-                if (envelopeBtn.classList.contains('open')) {
-                    return;
-                }
-
-                /* Step 1: Open envelope */
-
+                /* Step 1 */
                 envelopeBtn.classList.add('open');
 
-
-                /* Step 2: Launch letter */
-
+                /* Step 2 */
                 setTimeout(() => {
-
                     envelopeBtn.classList.add('launch');
-
                 }, 800);
 
-
-                /* Step 3: Reveal main invitation */
-
+                /* Step 3 */
                 setTimeout(() => {
-
-                    /* Force page to top before reveal */
-
                     forceTop();
 
-
-                    /* Show main content */
-
                     mainContent.style.visibility = 'visible';
-
                     mainContent.classList.add('revealed');
-
-
-                    /* Unlock scrolling */
-
+                    document.body.classList.add('invitation-open');
                     document.body.style.overflowY = 'auto';
 
-
-                    /* Initialize AOS */
-
-                    AOS.init({
-                        once: true,
-                        offset: 50,
-                        duration: 1200,
-                        easing: 'ease-out-cubic'
-                    });
-
-
-                    /* Rose petals */
+                    if (window.AOS) {
+                        AOS.init({
+                            once: true,
+                            offset: 50,
+                            duration: 1200,
+                            easing: 'ease-out-cubic'
+                        });
+                    }
 
                     fireRosePetals();
-
-
-                    /* Fade splash */
+                    createScrollPetals(8);
+                    startMusic();
+                    floatingTools.classList.add('show');
+                    showWelcome();
 
                     splashScreen.style.opacity = '0';
 
-
-                    /* Force top again after browser paints */
-
                     requestAnimationFrame(() => {
                         forceTop();
-
-                        requestAnimationFrame(() => {
-                            forceTop();
-                        });
+                        requestAnimationFrame(forceTop);
                     });
 
-
-                    /* Remove splash completely */
-
                     setTimeout(() => {
-
                         splashScreen.style.display = 'none';
-
                         forceTop();
-
                     }, 1500);
 
                 }, 2050);
-
             });
 
+            /* =========================================
+               CONTROLS
+               ========================================= */
+
+            musicBtn.addEventListener('click', toggleMusic);
+            mapsBtn.addEventListener('click', openMap);
+            calendarBtn.addEventListener('click', downloadCalendar);
+
+            fullInviteBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+
+                const goTop = () => {
+                    window.scrollTo({
+                        top: 0,
+                        left: 0,
+                        behavior: 'smooth'
+                    });
+                };
+
+                goTop();
+            });
+
+            window.addEventListener('scroll', handleScrollPetals, { passive: true });
 
             /* =========================================
                COUNTDOWN
                ========================================= */
 
-            const countDownDate =
-                new Date("Oct 6, 2026 18:00:00").getTime();
+            const countDownDate = new Date('2026-10-06T18:00:00+03:00').getTime();
+            const finishedMessage = document.getElementById('countdown-finished');
 
             const timerInterval = setInterval(() => {
-
-                const now = new Date().getTime();
-
+                const now = Date.now();
                 const distance = countDownDate - now;
 
-
-                if (distance < 0) {
-
+                if (distance <= 0) {
                     clearInterval(timerInterval);
 
-                    document.getElementById("days").innerHTML = "00";
-                    document.getElementById("hours").innerHTML = "00";
-                    document.getElementById("minutes").innerHTML = "00";
-                    document.getElementById("seconds").innerHTML = "00";
+                    document.getElementById('days').textContent = '00';
+                    document.getElementById('hours').textContent = '00';
+                    document.getElementById('minutes').textContent = '00';
+                    document.getElementById('seconds').textContent = '00';
 
+                    finishedMessage.classList.remove('hidden');
                     return;
                 }
 
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                const days = Math.floor(
-                    distance / (1000 * 60 * 60 * 24)
-                );
-
-                const hours = Math.floor(
-                    (distance % (1000 * 60 * 60 * 24)) /
-                    (1000 * 60 * 60)
-                );
-
-                const minutes = Math.floor(
-                    (distance % (1000 * 60 * 60)) /
-                    (1000 * 60)
-                );
-
-                const seconds = Math.floor(
-                    (distance % (1000 * 60)) /
-                    1000
-                );
-
-
-                document.getElementById("days").innerHTML =
-                    days < 10 ? "0" + days : days;
-
-                document.getElementById("hours").innerHTML =
-                    hours < 10 ? "0" + hours : hours;
-
-                document.getElementById("minutes").innerHTML =
-                    minutes < 10 ? "0" + minutes : minutes;
-
-                document.getElementById("seconds").innerHTML =
-                    seconds < 10 ? "0" + seconds : seconds;
-
+                document.getElementById('days').textContent = days < 10 ? '0' + days : days;
+                document.getElementById('hours').textContent = hours < 10 ? '0' + hours : hours;
+                document.getElementById('minutes').textContent = minutes < 10 ? '0' + minutes : minutes;
+                document.getElementById('seconds').textContent = seconds < 10 ? '0' + seconds : seconds;
             }, 1000);
 
         });
     </script>
-
 </body>
 </html>
