@@ -1739,10 +1739,11 @@
    ========================================= */
 
 let autoScrollActive = false;
-let autoScrollFrame = null;
+let autoScrollTimer = null;
 let autoScrollResumeTimer = null;
 
-const AUTO_SCROLL_SPEED = 0.20; // نزول هادي جدًا
+const AUTO_SCROLL_STEP = 1;      // 1px كل مرة
+const AUTO_SCROLL_INTERVAL = 70; // حوالي 14px في الثانية
 const AUTO_SCROLL_RESUME_DELAY = 3500;
 
 function stopAutoScrollTemporarily() {
@@ -1750,9 +1751,9 @@ function stopAutoScrollTemporarily() {
 
     autoScrollActive = false;
 
-    if (autoScrollFrame) {
-        cancelAnimationFrame(autoScrollFrame);
-        autoScrollFrame = null;
+    if (autoScrollTimer) {
+        clearInterval(autoScrollTimer);
+        autoScrollTimer = null;
     }
 
     clearTimeout(autoScrollResumeTimer);
@@ -1760,31 +1761,32 @@ function stopAutoScrollTemporarily() {
     autoScrollResumeTimer = setTimeout(() => {
         if (!invitationOpened) return;
 
-        autoScrollActive = true;
-        autoScrollLoop();
+        startAutoScroll();
     }, AUTO_SCROLL_RESUME_DELAY);
 }
 
-function autoScrollLoop() {
-    if (!autoScrollActive || !invitationOpened) return;
+function autoScrollStep() {
+    if (!invitationOpened || !autoScrollActive) return;
 
     const maxScroll = Math.max(
         0,
         document.documentElement.scrollHeight - window.innerHeight
     );
 
-    if (window.scrollY >= maxScroll - 1) {
+    const currentScroll = window.scrollY || document.documentElement.scrollTop;
+
+    if (currentScroll >= maxScroll) {
         autoScrollActive = false;
-        autoScrollFrame = null;
+
+        if (autoScrollTimer) {
+            clearInterval(autoScrollTimer);
+            autoScrollTimer = null;
+        }
+
         return;
     }
 
-    window.scrollTo({
-        top: window.scrollY + AUTO_SCROLL_SPEED,
-        behavior: 'auto'
-    });
-
-    autoScrollFrame = requestAnimationFrame(autoScrollLoop);
+    window.scrollBy(0, AUTO_SCROLL_STEP);
 }
 
 function startAutoScroll() {
@@ -1795,7 +1797,12 @@ function startAutoScroll() {
     if (autoScrollActive) return;
 
     autoScrollActive = true;
-    autoScrollLoop();
+
+    if (autoScrollTimer) {
+        clearInterval(autoScrollTimer);
+    }
+
+    autoScrollTimer = setInterval(autoScrollStep, AUTO_SCROLL_INTERVAL);
 }
             /* =========================================
                ROSE PETALS
@@ -2034,11 +2041,11 @@ function startAutoScroll() {
                 setTimeout(() => URL.revokeObjectURL(url), 1000);
             }
 
-            /* =========================================
-               WELCOME SCREEN
-               ========================================= */
+           /* =========================================
+   WELCOME SCREEN
+   ========================================= */
 
-            function showWelcome() {
+function showWelcome() {
     welcomeScreen.classList.add('show');
     welcomeScreen.setAttribute('aria-hidden', 'false');
 
@@ -2056,7 +2063,7 @@ function startAutoScroll() {
     }, 2600);
 }
 
-            welcomeScreen.addEventListener('click', () => {
+welcomeScreen.addEventListener('click', () => {
     welcomeScreen.classList.remove('show');
     welcomeScreen.classList.add('hide');
     welcomeScreen.setAttribute('aria-hidden', 'true');
