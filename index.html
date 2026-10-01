@@ -308,11 +308,12 @@
            MAIN SITE STYLING (FLORAL & LIGHT)
            ========================================= */
         #main-content {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 2s ease-in-out;
-            position: relative;
-        }
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 2s ease-in-out;
+    position: relative;
+    scroll-margin-top: 0;
+}
 
         /* Floral Corner Vectors (Using beautiful aesthetic images via CSS) */
         .floral-corner-tl {
@@ -454,7 +455,7 @@
         <div class="bg-pattern fixed"></div>
 
         <!-- HERO SECTION -->
-        <section class="min-h-screen relative flex flex-col items-center justify-center pt-10 px-4 overflow-hidden">
+        <section id="hero" class="min-h-screen relative flex flex-col items-center justify-center pt-10 px-4 overflow-hidden">
             <!-- Floral Decorative Corners -->
             <div class="floral-corner-tl"></div>
             <div class="floral-corner-br"></div>
@@ -661,6 +662,14 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Start invitation at the very top
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+
+window.scrollTo(0, 0);
+document.documentElement.scrollTop = 0;
+document.body.scrollTop = 0;
             
             // 1. VIP Entrance Logic (The Dakhla)
             const splashScreen = document.getElementById('splash-screen');
@@ -678,8 +687,58 @@
                     envelopeBtn.classList.add('launch');
                 }, 800);
 
-                // Step 3: بعد اختفاء الورقة، تظهر الدعوة الأساسية
-                setTimeout(() => {
+                // Step 3: بعد اختفاء الورقة، تظهر الدعوة الأساسية من أول الصفحة
+setTimeout(() => {
+
+    // إجبار الصفحة على البداية تمامًا
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'instant'
+    });
+
+    // التأكد إن الـ body يبدأ من أول الصفحة
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    splashScreen.style.opacity = '0';
+
+    // إظهار الصفحة الرئيسية
+    mainContent.style.visibility = 'visible';
+    mainContent.classList.add('revealed');
+
+    // فتح الـ scroll بعد تثبيت البداية
+    document.body.style.overflowY = 'auto';
+
+    // تأكيد إضافي إن الصفحة تبدأ من الـ Hero
+    requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    });
+
+    // Initialize scroll animations AFTER reveal
+    AOS.init({
+        once: true,
+        offset: 50,
+        duration: 1200,
+        easing: 'ease-out-cubic'
+    });
+
+    // Trigger custom Rose Petal Confetti
+    fireRosePetals();
+
+    // Remove the intro completely after its fade-out
+    setTimeout(() => {
+        splashScreen.style.display = 'none';
+
+        // تأكيد نهائي بعد إزالة شاشة الدخول
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }, 1500);
+
+}, 2050);
                     splashScreen.style.opacity = '0';
 
                     document.body.style.overflowY = 'auto'; // Unlock scroll
