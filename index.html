@@ -35,13 +35,27 @@
 
         html {
             scroll-behavior: smooth;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
             background-color: var(--bg-cream);
             color: var(--text-dark);
-            overflow: hidden;
+            width: 100%;
+            max-width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+            overflow-y: hidden;
         }
 
         body.invitation-open {
@@ -579,14 +593,10 @@
             transform: translateY(-3px) scale(1.03);
         }
 
-        #full-invite-btn {
-            width: auto;
-            padding: 0 16px;
-            border-radius: 999px;
-            gap: 8px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
+        #music-btn {
+            cursor: pointer;
+            padding: 0;
+            font: inherit;
         }
 
         /* =========================================
@@ -674,8 +684,8 @@
 
         @media (max-width: 420px) {
             .envelope-container {
-                width: 290px;
-                height: 200px;
+                width: min(290px, 86vw);
+                height: min(200px, 59vw);
             }
 
             .flap-left,
@@ -1085,13 +1095,8 @@
 
     </div>
 
-    <!-- FLOATING TOOLS -->
+    <!-- FLOATING MUSIC CONTROL -->
     <div class="floating-tools" id="floating-tools">
-        <a id="full-invite-btn" class="floating-btn" href="#hero" aria-label="العودة لبداية الدعوة">
-            <i class="fas fa-scroll"></i>
-            <span>دعوة كاملة</span>
-        </a>
-
         <button id="music-btn" class="floating-btn" type="button" aria-label="تشغيل الموسيقى" title="تشغيل الموسيقى">
             <i id="music-icon" class="fas fa-volume-xmark"></i>
         </button>
@@ -1099,7 +1104,7 @@
 
     <!-- Put your music file next to this HTML file with this exact name: music.mp3 -->
     <audio id="wedding-music" loop preload="auto" playsinline>
-        <source src="music.mp3" type="audio/mpeg">
+        <source src="./music.mp3" type="audio/mpeg">
     </audio>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -1142,7 +1147,6 @@
             const weddingMusic = document.getElementById('wedding-music');
             const mapsBtn = document.getElementById('maps-btn');
             const calendarBtn = document.getElementById('calendar-btn');
-            const fullInviteBtn = document.getElementById('full-invite-btn');
 
             let invitationOpened = false;
             let welcomeTimer = null;
@@ -1231,16 +1235,19 @@
                MUSIC
                ========================================= */
 
-            async function startMusic() {
-                try {
-                    await weddingMusic.play();
-                    musicIcon.className = 'fas fa-volume-high';
-                    musicBtn.setAttribute('aria-label', 'إيقاف الموسيقى');
-                    musicBtn.setAttribute('title', 'إيقاف الموسيقى');
-                } catch (error) {
-                    musicIcon.className = 'fas fa-volume-xmark';
-                    musicBtn.setAttribute('aria-label', 'تشغيل الموسيقى');
-                    musicBtn.setAttribute('title', 'تشغيل الموسيقى');
+            function startMusic() {
+                const playPromise = weddingMusic.play();
+
+                if (playPromise && typeof playPromise.then === 'function') {
+                    playPromise.then(() => {
+                        musicIcon.className = 'fas fa-volume-high';
+                        musicBtn.setAttribute('aria-label', 'إيقاف الموسيقى');
+                        musicBtn.setAttribute('title', 'إيقاف الموسيقى');
+                    }).catch(() => {
+                        musicIcon.className = 'fas fa-volume-xmark';
+                        musicBtn.setAttribute('aria-label', 'تشغيل الموسيقى');
+                        musicBtn.setAttribute('title', 'تشغيل الموسيقى');
+                    });
                 }
             }
 
@@ -1349,6 +1356,10 @@
                 if (invitationOpened) return;
                 invitationOpened = true;
 
+                // Start music immediately from the user's click gesture
+                // so browsers are less likely to block autoplay.
+                startMusic();
+
                 /* Step 1 */
                 envelopeBtn.classList.add('open');
 
@@ -1364,6 +1375,7 @@
                     mainContent.style.visibility = 'visible';
                     mainContent.classList.add('revealed');
                     document.body.classList.add('invitation-open');
+                    document.body.style.overflowX = 'hidden';
                     document.body.style.overflowY = 'auto';
 
                     if (window.AOS) {
@@ -1377,7 +1389,6 @@
 
                     fireRosePetals();
                     createScrollPetals(8);
-                    startMusic();
                     floatingTools.classList.add('show');
                     showWelcome();
 
@@ -1403,20 +1414,6 @@
             musicBtn.addEventListener('click', toggleMusic);
             mapsBtn.addEventListener('click', openMap);
             calendarBtn.addEventListener('click', downloadCalendar);
-
-            fullInviteBtn.addEventListener('click', (event) => {
-                event.preventDefault();
-
-                const goTop = () => {
-                    window.scrollTo({
-                        top: 0,
-                        left: 0,
-                        behavior: 'smooth'
-                    });
-                };
-
-                goTop();
-            });
 
             window.addEventListener('scroll', handleScrollPetals, { passive: true });
 
