@@ -1592,7 +1592,7 @@
 
     <!-- Put your music file next to this HTML file with this exact name: music.mp3 -->
     <audio id="wedding-music" loop preload="auto" playsinline>
-        <source src="./music.mp3" type="audio/mpeg">
+        <source src="./music.mp3?v=20261002" type="audio/mpeg">
     </audio>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -1768,19 +1768,28 @@
                ========================================= */
 
             function startMusic() {
-                const playPromise = weddingMusic.play();
+                try {
+                    weddingMusic.volume = 0.65;
+                    weddingMusic.muted = false;
 
-                if (playPromise && typeof playPromise.then === 'function') {
-                    playPromise.then(() => {
-                        musicBtn.classList.add('playing');
-                        musicIcon.className = 'fas fa-volume-high';
-                        musicBtn.setAttribute('aria-label', 'إيقاف الموسيقى');
-                        musicBtn.setAttribute('title', 'إيقاف الموسيقى');
-                    }).catch(() => {
-                        musicIcon.className = 'fas fa-volume-xmark';
-                        musicBtn.setAttribute('aria-label', 'تشغيل الموسيقى');
-                        musicBtn.setAttribute('title', 'تشغيل الموسيقى');
-                    });
+                    const playPromise = weddingMusic.play();
+
+                    if (playPromise && typeof playPromise.then === 'function') {
+                        playPromise.then(() => {
+                            musicBtn.classList.add('playing');
+                            musicIcon.className = 'fas fa-volume-high';
+                            musicBtn.setAttribute('aria-label', 'إيقاف الموسيقى');
+                            musicBtn.setAttribute('title', 'إيقاف الموسيقى');
+                        }).catch(() => {
+                            musicBtn.classList.remove('playing');
+                            musicIcon.className = 'fas fa-volume-xmark';
+                            musicBtn.setAttribute('aria-label', 'تشغيل الموسيقى');
+                            musicBtn.setAttribute('title', 'تشغيل الموسيقى');
+                        });
+                    }
+                } catch (error) {
+                    musicBtn.classList.remove('playing');
+                    musicIcon.className = 'fas fa-volume-xmark';
                 }
             }
 
@@ -1795,6 +1804,13 @@
                     musicBtn.setAttribute('title', 'تشغيل الموسيقى');
                 }
             }
+
+            weddingMusic.addEventListener('error', () => {
+                musicBtn.classList.remove('playing');
+                musicIcon.className = 'fas fa-volume-xmark';
+                musicBtn.setAttribute('aria-label', 'تشغيل الموسيقى');
+                musicBtn.setAttribute('title', 'الموسيقى غير متاحة - اضغط للتشغيل');
+            });
 
             /* =========================================
                MAPS
@@ -1886,12 +1902,17 @@
                VIP ENTRANCE
                ========================================= */
 
+            envelopeBtn.addEventListener('pointerdown', () => {
+                if (!invitationOpened) {
+                    startMusic();
+                }
+            }, { passive: true });
+
             envelopeBtn.addEventListener('click', () => {
                 if (invitationOpened) return;
                 invitationOpened = true;
 
-                // Start music immediately from the user's click gesture
-                // so browsers are less likely to block autoplay.
+                // Retry inside the click gesture for browser compatibility.
                 startMusic();
 
                 /* Step 1 */
